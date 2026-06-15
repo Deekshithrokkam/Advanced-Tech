@@ -14,31 +14,40 @@ import Vision from './components/Vision'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollToTop from './components/ScrollToTop'
+import AdminPlatform from './components/admin/AdminPlatform'
+import AdminLogin from './components/admin/AdminLogin'
+import { SiteContentProvider } from './context/SiteContentContext'
 
-export default function App() {
+function MainWebsite() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Prevent scroll during loading
     if (loading) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
+
+    return () => {
+      document.body.style.overflow = ''
+    }
   }, [loading])
 
   return (
     <div className="relative min-h-screen bg-zinc-950">
       <AnimatePresence mode="wait">
         {loading && (
-          <LoadingScreen key="loader" onComplete={() => setLoading(false)} />
+          <LoadingScreen
+            key="loader"
+            onComplete={() => setLoading(false)}
+          />
         )}
       </AnimatePresence>
 
       {!loading && (
         <>
           <Navbar />
+
           <main>
             <Hero />
             <About />
@@ -51,10 +60,44 @@ export default function App() {
             <Vision />
             <Contact />
           </main>
+
           <Footer />
           <ScrollToTop />
         </>
       )}
     </div>
+  )
+}
+
+export default function App() {
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const auth = localStorage.getItem('adminAuth')
+    setLoggedIn(auth === 'true')
+  }, [])
+
+  const isAdmin =
+    typeof window !== 'undefined' &&
+    (
+      window.location.pathname.replace(/\/$/, '') === '/admin' ||
+      window.location.hash === '#admin' ||
+      window.location.hash === '#/admin'
+    )
+
+  return (
+    <SiteContentProvider>
+      {isAdmin ? (
+        loggedIn ? (
+          <AdminPlatform />
+        ) : (
+          <AdminLogin
+            onLogin={() => setLoggedIn(true)}
+          />
+        )
+      ) : (
+        <MainWebsite />
+      )}
+    </SiteContentProvider>
   )
 }
