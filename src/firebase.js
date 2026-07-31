@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyDRN02evVuJP4wX3khmI63yRMXAYpF-nRM",
   authDomain: "atc-website-ddd37.firebaseapp.com",
   projectId: "atc-website-ddd37",
-  storageBucket: "atc-website-ddd37.firebasestorage.app",
+  storageBucket: "atc-website-ddd37.appspot.com",
   messagingSenderId: "449650054343",
   appId: "1:449650054343:web:4bd9f6476e04f271b71ae2",
 };
